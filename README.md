@@ -420,6 +420,8 @@ Today's task showcases skills expected of mid-level DevOps engineers:
 **Congratulations to me! I have completed a real-world mid-level DevOps task!** 🎊
 
 <img width="1892" height="1032" alt="image" src="https://github.com/user-attachments/assets/2666c3d4-a19a-4e6e-94b0-d06d0e534ce9" />
+<img width="1916" height="1011" alt="image" src="https://github.com/user-attachments/assets/1426437e-70a0-44ff-87d9-df5dedb115ad" />
+
 
 
 ---
