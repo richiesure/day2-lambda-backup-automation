@@ -1,0 +1,26 @@
+# Terraform files
+*.tfstate
+*.tfstate.*
+.terraform/
+.terraform.lock.hcl
+*.tfvars
+crash.log
+override.tf
+override.tf.json
+
+# Lambda zip files
+lambda/*.zip
+
+# Python files
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Test files
+response.json
+
+# OS files
+.DS_Store
+Thumbs.db
