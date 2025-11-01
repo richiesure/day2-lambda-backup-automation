@@ -64,8 +64,8 @@ resource "aws_iam_policy" "lambda_backup_policy" {
   })
 
   tags = {
-    Name        = "Lambda-EC2-Backup-Policy"
-    ManagedBy   = "Terraform"
+    Name      = "Lambda-EC2-Backup-Policy"
+    ManagedBy = "Terraform"
   }
 }
 
@@ -86,12 +86,12 @@ data "archive_file" "lambda_zip" {
 resource "aws_lambda_function" "ec2_backup" {
   filename         = data.archive_file.lambda_zip.output_path
   function_name    = "ec2-automated-backup"
-  role            = aws_iam_role.lambda_backup_role.arn
-  handler         = "ec2_snapshot.lambda_handler"
+  role             = aws_iam_role.lambda_backup_role.arn
+  handler          = "ec2_snapshot.lambda_handler"
   source_code_hash = data.archive_file.lambda_zip.output_base64sha256
-  runtime         = "python3.12"
-  timeout         = 60
-  
+  runtime          = "python3.12"
+  timeout          = 60
+
   description = "Automated EC2 instance backup function"
 
   # Environment variables (if needed)
@@ -114,8 +114,8 @@ resource "aws_cloudwatch_log_group" "lambda_logs" {
   retention_in_days = 7
 
   tags = {
-    Name        = "Lambda-Backup-Logs"
-    ManagedBy   = "Terraform"
+    Name      = "Lambda-Backup-Logs"
+    ManagedBy = "Terraform"
   }
 }
 
@@ -126,8 +126,8 @@ resource "aws_cloudwatch_event_rule" "daily_backup" {
   schedule_expression = "cron(0 2 * * ? *)"
 
   tags = {
-    Name        = "Daily-EC2-Backup-Schedule"
-    ManagedBy   = "Terraform"
+    Name      = "Daily-EC2-Backup-Schedule"
+    ManagedBy = "Terraform"
   }
 }
 
@@ -152,4 +152,28 @@ resource "aws_ec2_tag" "backup_tag" {
   resource_id = var.target_instance_id
   key         = "Backup"
   value       = "true"
+}
+
+# Create CloudWatch Alarm for Lambda errors
+resource "aws_cloudwatch_metric_alarm" "lambda_errors" {
+  alarm_name          = "ec2-backup-lambda-errors"
+  comparison_operator = "GreaterThanThreshold"
+  evaluation_periods  = 1
+  metric_name         = "Errors"
+  namespace           = "AWS/Lambda"
+  period              = 300
+  statistic           = "Sum"
+  threshold           = 0
+  alarm_description   = "Alert when EC2 backup Lambda function fails"
+  treat_missing_data  = "notBreaching"
+
+  dimensions = {
+    FunctionName = aws_lambda_function.ec2_backup.function_name
+  }
+
+  tags = {
+    Name        = "Lambda-Backup-Error-Alarm"
+    Environment = "Development"
+    ManagedBy   = "Terraform"
+  }
 }

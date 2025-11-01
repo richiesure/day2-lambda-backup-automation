@@ -11,5 +11,5 @@ variable "aws_region" {
 variable "target_instance_id" {
   description = "EC2 instance ID to tag for backup (from Day 1)"
   type        = string
-  default     = "i-077464828f9d99024"  # Your Day 1 instance ID
+  default     = "i-077464828f9d99024" # Your Day 1 instance ID
 }
